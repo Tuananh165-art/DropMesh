@@ -1,6 +1,6 @@
 # Spec 0001: M1 core transfer
 
-**Status:** implemented and verified on Windows loopback; physical LAN acceptance remains open. **Updated:** 2026-10-10.
+**Status:** implemented; local Windows loopback and hosted native Windows/Linux/macOS test suites pass. Physical two-device offline-LAN acceptance remains open. **Updated:** 2026-10-13.
 
 ## Problem and goals
 
@@ -30,4 +30,4 @@ Control metadata visible to receiver after authentication includes basename, siz
 
 ## Acceptance
 
-Unit/fuzz framing, invite, state, names, bounds; integration authentication, concurrent admission, integrity and cleanup; real-binary loopback E2E; physical LAN with Internet disabled; per-chunk and whole digest; no-clobber and cleanup; race tests. Local unit, integration, fuzz smoke, and loopback evidence are recorded in TODO. Hosted race and physical LAN checks remain open. Loopback is not LAN proof.
+Unit/fuzz framing, invite, state, names, bounds; integration authentication, concurrent admission, integrity and cleanup; real-binary loopback E2E; physical LAN with Internet disabled; per-chunk and whole digest; no-clobber and cleanup; race tests. Local unit, integration, fuzz smoke, and loopback evidence are recorded in TODO. Hosted native suites and Linux race pass; physical LAN remains open. Loopback is not LAN proof.

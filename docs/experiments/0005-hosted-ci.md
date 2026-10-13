@@ -31,4 +31,6 @@ Windows Git checkout line-ending conversion made otherwise formatted Go sources 
 
 The follow-up verifies the line-ending fix and provides hosted native process-exit test evidence for all three OSes. It does not establish power-loss durability.
 
+Documentation-only run 38345422534 on commit `97b32ca77c000456efc71c45f179045f5a55b530` also passed all jobs.
+
 These hosted process-exit tests do not establish power-loss durability. Physical offline-LAN acceptance and independent protocol/threat-model review remain open.

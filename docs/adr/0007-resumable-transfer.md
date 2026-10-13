@@ -1,6 +1,6 @@
 # ADR-0007: M2 resumable transfer identity and journal
 
-**Status:** accepted for M2 implementation. M2 milestone acceptance still requires its crash/recovery test matrix and does not imply M1 physical LAN acceptance.
+**Status:** accepted for M2 implementation. Hosted process-exit/fault suites pass on Windows/Linux/macOS; M2 milestone acceptance still requires independent protocol/threat review and maintainer signoff. This does not imply M1 physical LAN acceptance.
 
 ## Context
 
