@@ -19,4 +19,4 @@ M1 uses an ephemeral session ID and one-time bearer invite. Reusing that invite 
 
 ## Consequences
 
-The receiver must be given a fresh invite after either process restarts, and the sender must retain the non-secret transfer ID and choose the same source file. Resume state can expose basename, size, digest, and partial bytes to users with access to the output directory. Corrupt or incomplete journal entries cause retransmission or transfer restart, never publication. Platform-native fault tests remain mandatory.
+The receiver must be given a fresh invite after either process restarts, and the sender must retain the non-secret transfer ID and choose the same source file. Resume state can expose basename, size, digest, and partial bytes to users with access to the output directory. Corrupt or incomplete journal entries cause retransmission or transfer restart, never publication. Local Windows and hosted Windows/Linux/macOS process-exit and injected-fault test suites pass; independent review and final acceptance remain mandatory, and no power-loss durability is claimed.

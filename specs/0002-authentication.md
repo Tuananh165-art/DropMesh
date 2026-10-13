@@ -1,6 +1,6 @@
 # Spec 0002: one-time invite authentication
 
-**Status:** M1 authentication behavior retained in M2 protocol v2 and locally verified on Windows loopback; native/hosted and physical LAN evidence remain open.
+**Status:** M1 authentication behavior retained in M2 protocol v2. Local Windows and hosted Windows/Linux/macOS test suites pass; real two-device offline-LAN acceptance remains open.
 
 The sender generates an ephemeral P-256 self-signed CA/server certificate, 128-bit random session ID, and 256-bit random capability from `crypto/rand`. The invite binds these to the endpoint, version 2, prefix `dropmesh:v2:`, ALPN `dropmesh/2`, and a 15-minute expiry. It is a bearer credential and must be shared through a trusted channel. Version 1 is not silently accepted.
 

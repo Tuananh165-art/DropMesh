@@ -1,6 +1,6 @@
 # Spec 0004: resumable one-file transfer
 
-**Status:** accepted for M2 implementation. M1's physical and hosted acceptance gates remain open; M2 work proceeds against the locally verified transfer core and does not close those gates.
+**Status:** accepted for M2 implementation. Hosted M1 CI acceptance passed on Windows/Linux/macOS in run 38344545090; physical offline-LAN acceptance remains open.
 
 ## Version 2 wire flow
 
@@ -38,10 +38,10 @@ Journal records are bounded, fixed-size records containing chunk index, offset, 
 - Never accept sender-controlled filesystem paths. Keep staging and state under receiver-owned rooted storage; preserve no-clobber publication and delete owned state on completion, explicit user deletion, or expiry.
 - Version any reconnect messages or changed retry semantics. Reject unknown versions and do not silently downgrade.
 
-## Decisions still open
+## Acceptance review still open
 
-- Native filesystem and process-crash fault-injection results on Windows, macOS, and Linux.
-- Whether same-digest existing-destination handling and the completion acknowledgment are sufficiently idempotent under every publish/cleanup crash point; the implementation must prove this with process-kill tests.
+- An independent protocol/threat reviewer must assess resume credential replay, theft, expiry, deletion, and whether the recorded tests support the stated restart-recovery claim.
+- The internal matrix is recorded in `docs/acceptance/M2.md`; final maintainer signoff must preserve its distinction between process-exit recovery, power-loss durability, and M1's physical-LAN gate.
 
 ## Accepted M2 direction
 
@@ -58,8 +58,8 @@ Journal records are bounded, fixed-size records containing chunk index, offset, 
 
 - Crash-consistency experiment with process termination between chunk write, data sync, state commit, recovery scan, and final publication.
 - Fault injection for short writes, sync failure, state corruption, stale state, duplicate chunks, and disk exhaustion.
-- Native filesystem evidence on every supported operating system. Cross-compilation is not runtime evidence, and process termination is not power-loss evidence.
+- Native hosted-OS test evidence on Windows, macOS, and Linux. Cross-compilation is not runtime evidence, and process termination is not power-loss evidence.
 - Real CLI sender and receiver processes must be stopped and restarted with the same source, output directory, and transfer ID, using a newly generated invite; verify retransmission only of uncommitted chunks and exact final bytes.
 - Threat-model and protocol review for resume credential replay, theft, expiry, and deletion.
 
-The preliminary Windows storage probe is recorded in `docs/experiments/0002-m2-storage-durability.md`; subprocess restart outcomes are in `docs/experiments/0003-m2-process-exit-recovery.md`. The implementation uses an append-only journal rather than relying on replaceable-manifest atomicity, but Windows-only process-exit tests are not sufficient to satisfy the cross-platform crash/recovery gates.
+The preliminary Windows storage probe is recorded in `docs/experiments/0002-m2-storage-durability.md`; subprocess restart outcomes are in `docs/experiments/0003-m2-process-exit-recovery.md`; hosted CI outcomes are in `docs/experiments/0005-hosted-ci.md`. The implementation uses an append-only journal rather than relying on replaceable-manifest atomicity. Local Windows and hosted Windows/Linux/macOS process-exit suites and injected storage-failure tests pass; they do not prove power-loss durability.

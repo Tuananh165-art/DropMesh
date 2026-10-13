@@ -4,7 +4,7 @@ Direct, authenticated file transfer between devices. DropMesh is an early Go pro
 
 ## Status
 
-The M0 foundation and M1 direct QUIC transfer are implemented; M1's offline two-device LAN and hosted CI acceptance gates remain open. M2 resume is in progress: protocol v2, receiver-owned journaled state, explicit state deletion, and Windows loopback restart recovery are implemented and locally tested. The native crash/fault matrix and cross-platform runtime evidence remain open. Discovery, rendezvous, relay, browser, desktop, and mobile support are future roadmap work.
+The M0 foundation and M1 direct QUIC transfer are implemented. Hosted Windows/Linux/macOS CI passes; M1 still needs offline two-device LAN acceptance. M2 resume is in progress: protocol v2, receiver-owned journaled state, explicit state deletion, and process-restart recovery are implemented and tested locally and on hosted Windows/Linux/macOS. Independent protocol/threat review and maintainer signoff remain open; see [`docs/acceptance/M2.md`](docs/acceptance/M2.md). Tests do not establish power-loss durability. Discovery, rendezvous, relay, browser, desktop, and mobile support are future roadmap work.
 
 ## Resume a transfer
 

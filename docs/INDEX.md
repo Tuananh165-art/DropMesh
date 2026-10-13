@@ -16,7 +16,7 @@
 
 ## Engineering
 
-- `../skills/`, `experiments/` (including M2 storage probes in 0002 and 0003), and `MEMORY.md`
+- `../skills/`, `experiments/` (including M2 storage probes in 0002 and 0003), `acceptance/` (milestone evidence matrices), and `MEMORY.md`
 - `../CONTRIBUTING.md`, `../SECURITY.md`, `../CHANGELOG.md`
 
 Document status labels: verified implementation, implemented unverified, proposal, experiment, externally sourced.

@@ -12,7 +12,7 @@
 - What chunk size, parallelism, and hashing strategy work across slow disks and LAN/WAN? Use benchmark and network experiments.
 - What limits, TTLs, identity proofs, and quotas make public signaling/relay safe?
 - Which folder path/collision rules are safe across Windows/macOS/Linux and case-insensitive filesystems?
-- Which cross-platform crash/fault matrix is sufficient to claim M2 restart recovery, especially on Windows where directory sync is unavailable in the local probe?
+- Does the current process-exit and injected-fault matrix justify the documented restart-recovery claim on all supported OSes? Hosted Windows/Linux/macOS test suites pass; independent review should assess coverage. No result establishes power-loss durability.
 - Which browser streaming/write APIs provide useful large-file receive support?
 - What native mobile framework can share Go behavior without brittle toolchain or lifecycle coupling?
 - Which quic-go migration/probing APIs are stable in the selected release, and what succeeds on physical devices?
