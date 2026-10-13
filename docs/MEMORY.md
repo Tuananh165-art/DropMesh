@@ -1,0 +1,21 @@
+# Engineering memory
+
+- Keep protocol messages, invite capabilities, source names, and user paths out of routine logs.
+- M1 completion is stronger than a successful loopback test: two real devices and Internet disabled are a distinct gate.
+- Rooted hard-link publication intentionally fails on filesystems without hard-link support; never fall back to replace/rename over an existing path.
+- Do not start WAN/relay or transport scoring until their connectivity and cost decisions are backed by experiments.
+- Keep every `quic-go` type inside `internal/transport/quic`; transfer code consumes bounded stream wrappers.
+- Hash with `hash.Sum` after `io.Copy`; empty input produces no `Write` callback. Close the listener after one admission while draining and rejecting already queued peers.
+- Classify receive-side destination write errors at the filesystem boundary; otherwise the protocol-level receive loop can misreport disk/write failures as malformed peer data.
+- Tie an established QUIC connection to the caller context with `context.AfterFunc`; otherwise a canceled operation can remain blocked in a stream read until the peer or idle timeout responds.
+- Do not assume `os.Rename` gives an atomic cross-platform manifest replacement: its Go documentation excludes atomicity on non-Unix systems, and directory `File.Sync` returned access denied on the local Windows/NTFS probe.
+- For M2 journal recovery, committed chunks are an ordered prefix. Reject records after the declared chunk count before computing offsets or writing a bitmap; a zero-length synthetic record for an empty file must never become committed.
+- If the fully reassembled bytes fail the authenticated whole-file digest, reset the receiver's journal before allowing resume. Otherwise an all-committed bitmap would cause every retry to omit the same bad chunks forever.
+- Keep the global receiver-state lock file outside the transfer directory and retain it after cleanup; unlinking a locked inode can allow a second process to lock a replacement inode concurrently.
+- Derive resume expiry from the last journaled chunk timestamp, not the journal file's modification time; truncating a torn tail during recovery changes file mtime without new transfer progress.
+- Validate untrusted offered filenames before writing them to a terminal; validate a supplied resume ID before hashing a potentially large source file.
+- Treat mDNS/DNS-SD as observable, unauthenticated candidate discovery; never use its service record as a trusted device identity.
+- Exchange control-stream FINs after completion so a fast receiver cannot close QUIC before the sender reads its acknowledgment; after the acknowledgment, treat only a remote code-zero application close as clean if connection close overtakes the final FIN.
+- The `dropmesh` module path and product name are provisional; settle both before public release.
+- For pinned Staticcheck, install the versioned analyzer with `go install tool@version` outside the target module, then run the installed binary after any analysis-only module Go-version adjustment. Version-qualified `go run` ignores the current module, and relative `-modfile` flags can fail when package loading runs from nested directories.
+- When govulncheck reports fixed module-only advisories in `x/net`, check the fixed version and let `go mod tidy` raise the full module graph; re-run the scan to distinguish resolved advisories from uncalled packages such as `x/crypto/openpgp` that have no fixed version.

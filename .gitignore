@@ -1,0 +1,5 @@
+.cache/
+.tools/
+dist/
+*.prof
+coverage.out

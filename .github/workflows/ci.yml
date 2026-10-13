@@ -1,0 +1,90 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  native:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.27.2'
+          cache: true
+      - name: Format
+        shell: bash
+        run: test -z "$(gofmt -l $(git ls-files '*.go'))"
+      - run: go vet ./...
+      - run: go test ./...
+
+  cross-build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - goos: linux
+            goarch: amd64
+          - goos: linux
+            goarch: arm64
+          - goos: windows
+            goarch: amd64
+          - goos: darwin
+            goarch: amd64
+          - goos: darwin
+            goarch: arm64
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.27.2'
+      - run: go build -o /tmp/dropmesh ./cmd/dropmesh
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+
+  linux-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.27.2'
+      - name: Race detector
+        run: go test -race ./...
+      - name: Vulnerability scan
+        run: go run golang.org/x/vuln/cmd/govulncheck@v1.8.0 ./...
+      - name: Fuzz smoke
+        run: |
+          go test ./internal/auth -run '^$' -fuzz '^FuzzDecodeInvite$' -fuzztime 10s
+          go test ./internal/protocol -run '^$' -fuzz '^FuzzReadMessage$' -fuzztime 10s
+          go test ./internal/filesafe -run '^$' -fuzz '^FuzzValidateName$' -fuzztime 10s
+          go test ./internal/resume -run '^$' -fuzz '^FuzzReadJournalHeader$' -fuzztime 10s
+          go test ./internal/resume -run '^$' -fuzz '^FuzzDecodeJournalRecord$' -fuzztime 10s
+      - name: Benchmark smoke
+        run: go test ./internal/transfer -run '^$' -bench '^BenchmarkHashOneMiB$' -benchtime 1x
+      - name: Durable resume benchmark smoke
+        run: go test ./internal/resume -run '^$' -bench '^BenchmarkDurableChunkCommit$' -benchtime 1x
+
+  static-analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Staticcheck v0.8.1 uses a Go 1.26-compatible export importer. Lower the
+      # module directive only in this isolated job checkout before analysis.
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26.9'
+      - run: |
+          go mod edit -go=1.26.0 -toolchain=none go.mod
+          go mod tidy
+          go install honnef.co/go/tools/cmd/staticcheck@v0.8.1
+          "$(go env GOPATH)/bin/staticcheck" ./...
