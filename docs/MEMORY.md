@@ -19,3 +19,4 @@
 - The `dropmesh` module path and product name are provisional; settle both before public release.
 - For pinned Staticcheck, install the versioned analyzer with `go install tool@version` outside the target module, then run the installed binary after any analysis-only module Go-version adjustment. Version-qualified `go run` ignores the current module, and relative `-modfile` flags can fail when package loading runs from nested directories.
 - When govulncheck reports fixed module-only advisories in `x/net`, check the fixed version and let `go mod tidy` raise the full module graph; re-run the scan to distinguish resolved advisories from uncalled packages such as `x/crypto/openpgp` that have no fixed version.
+- Pin Go source checkout line endings with `.gitattributes` (`*.go text eol=lf`): Windows Git autocrlf can make `gofmt -l` report otherwise formatted files in hosted CI.
